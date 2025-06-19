@@ -6,7 +6,7 @@
 
     <div class="border rounded p-4 mb-4 shadow">
         <p><strong>Category:</strong> {{ $book->category->name }}</p>
-        <p><strong>Price:</strong> ${{ $book->price }}</p>
+        <p><strong>Price:</strong> Rp {{ number_format($book->price, 0, ',', '.') }}</p>
         <p class="mt-4">{{ $book->description }}</p>
 
         <form action="{{ route('user.orders.store') }}" method="POST" class="mt-4">

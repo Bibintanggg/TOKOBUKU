@@ -37,14 +37,24 @@ class BookController extends Controller
             'author' => 'required',
             'price' => 'required|numeric',
             'stock' => 'required|integer',
+            'cover'=> 'nullable|image|mimes:jpeg,jpg,png|max:2048',
             'category_id' => 'required|exists:categories,id',
             'description' => 'nullable'
         ]);
-
+    
+        if ($request->hasFile('cover')) {
+            $cover = $request->file('cover');
+            $coverName = time() . '_' . $cover->getClientOriginalName();
+            $cover->move(public_path('covers'), $coverName);
+    
+            $validated['cover'] = $coverName;
+        }
+    
         Book::create($validated);
+    
         return redirect()->route('admin.books.index')->with('success', 'Buku berhasil ditambahkan.');
     }
-
+    
     /**
      * Display the specified resource.
      */

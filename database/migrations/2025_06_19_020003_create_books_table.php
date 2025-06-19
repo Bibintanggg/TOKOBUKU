@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->constrained('categories');
             $table->string('title');
+            $table->string('cover')->nullable();
             $table->string('author');
             $table->integer('stock');
             $table->text('description');
