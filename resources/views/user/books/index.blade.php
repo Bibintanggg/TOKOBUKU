@@ -7,6 +7,12 @@
     <div class="grid grid-cols-3 gap-4">
         @foreach($books as $book)
             <div class="border rounded p-4 shadow">
+                <h3>{{ $book->judul }}</h3>
+                @if ($book->cover)
+                    <img src="{{ asset('covers/' . $book->cover) }}" width="150">
+                @else
+                    <p>(tidak ada cover)</p>
+                @endif
                 <h2 class="font-bold text-lg">{{ $book->title }}</h2>
                 <p class="text-sm text-gray-500">{{ $book->category->name }}</p>
                 <p class="text-sm text-gray-500">{{ $book->description }}</p>
