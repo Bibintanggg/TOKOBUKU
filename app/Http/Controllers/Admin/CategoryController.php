@@ -24,7 +24,7 @@ class CategoryController extends Controller
     {
         //
         $categories = Category::all(); 
-        return view('admin.books.create', compact('categories'));
+        return view('admin.categories.create', compact('categories'));
     }
 
     /**

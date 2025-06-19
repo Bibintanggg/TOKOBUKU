@@ -62,9 +62,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 
     // Checkout & Pesanan
-    Route::post('/checkout', [CartController::class, 'checkout'])->name('cart.checkout')->middleware('auth');
-    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
-    Route::get('/orders', [CheckoutController::class, 'index'])->name('orders.index');
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout'); // ✅ ini GET
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process'); // opsional, tergantung kamu pakai atau nggak
+    Route::get('/orders', [CheckoutController::class, 'index'])->name('orders.index'); // atau bisa pakai route lain
 });
 
 

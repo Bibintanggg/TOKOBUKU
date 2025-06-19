@@ -1,3 +1,6 @@
+@extends('layouts.user')
+
+@section('content')
 <h1 class="text-2xl font-bold mb-4">Pesanan Saya</h1>
 @foreach($orders as $order)
     <div class="border p-4 mb-4">
@@ -9,3 +12,4 @@
         </ul>
     </div>
 @endforeach
+@endsection
