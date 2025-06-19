@@ -4,7 +4,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckoutController;
 
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
@@ -20,16 +22,20 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth'])->get('/dashboard', function () {
-    return auth()->user()->role === 'admin'
-        ? redirect()->route('admin.dashboard')
-        : redirect()->route('user.books.index');
+    $user = auth()->user();
+
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    } else {
+        return redirect()->route('user.books.index');
+    }
 })->name('dashboard');
+
 
 Route::prefix('admin')->name('admin.')->group(function() {
     Route::resource('books', AdminBookController::class);
     Route::resource('categories', AdminCategoryController::class);
     Route::resource('orders', AdminOrderController::class);
-    Route::resource('admin/categories', CategoryController::class);
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
@@ -45,5 +51,22 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// ======================
+// USER ROUTES
+// ======================
+Route::middleware(['auth'])->group(function () {
+    // Keranjang
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+    Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+
+    // Checkout & Pesanan
+    Route::post('/checkout', [CartController::class, 'checkout'])->name('cart.checkout')->middleware('auth');
+    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/orders', [CheckoutController::class, 'index'])->name('orders.index');
+});
+
+
 
 require __DIR__.'/auth.php';
