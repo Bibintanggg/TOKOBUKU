@@ -11,9 +11,17 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() 
+    public function index(Request $request)
     {
-        $books = Book::with('category')->latest()->get();
+        $query = Book::with('category');
+
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%')
+                  ->orWhere('author', 'like', '%' . $request->search . '%');
+        }
+
+        $books = $query->latest()->paginate(12);
+
         return view('user.books.index', compact('books'));
     }
 
@@ -36,9 +44,11 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Book $book) 
+   public function show(Book $book)
     {
-        $book->load('reviews.user');
+        // Jika ada relasi review dan user, load juga
+        $book->load('category', 'reviews.user');
+
         return view('user.books.show', compact('book'));
     }
 

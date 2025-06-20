@@ -2,7 +2,16 @@
 @section('title', 'Book Store')
 
 @section('content')
-    <h1 class="text-2xl font-bold mb-4">Discover</h1>
+<div class="p-20">
+    <div>
+
+    <div class="bg-red-300/30 max-w-[80rem]">
+        <div class="text-sm bg-red-300/30 rounded-xl">
+            <p>Saat ini, metode pengiriman yang tersedia hanya melalui sistem Cash On Delivery (COD). Kami memohon pengertian dan kesabaran Anda sementara kami terus berupaya menambahkan metode pembayaran dan pengiriman lainnya demi kenyamanan Anda di masa mendatang.</p>
+        </div>
+    </div>
+    <h1 class="text-2xl font-bold mb-4 mt-10">Discover</h1>
+    
 
     <div class="grid grid-cols-3 gap-4">
         @foreach($books as $book)
@@ -30,6 +39,8 @@
 
             </div>
         @endforeach
-
     </div>
+    </div>
+</div>
+
 @endsection

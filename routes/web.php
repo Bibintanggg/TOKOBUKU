@@ -65,6 +65,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout'); // ✅ ini GET
     Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process'); // opsional, tergantung kamu pakai atau nggak
     Route::get('/orders', [CheckoutController::class, 'index'])->name('orders.index'); // atau bisa pakai route lain
+    
+    Route::get('/books', [UserBookController::class, 'index'])->name('books.index');
+    Route::get('/books/{book}', [UserBookController::class, 'show'])->name('books.show');
 });
 
 

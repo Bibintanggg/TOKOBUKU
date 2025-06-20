@@ -7,7 +7,7 @@
         <input type="text" name="search" placeholder="Cari buku..." class="border rounded p-2"
             value="{{ request('search') }}">
         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Cari</button>
-        </form>
+    </form>
     <a href="{{ route('admin.books.create') }}" 
     class=" text-white py-2 px-4 rounded mb-4 inline-block bg-blue-500"
     >Add Book</a>
