@@ -1,44 +1,66 @@
 @extends('layouts.user')
 
-@section('content')
-<h1 class="text-2xl font-bold mb-4">Keranjang</h1>
-<table class="table-auto w-full text-left">
-    <thead>
-        <tr class="bg-gray-200">
-            <th class="p-2">Buku</th>
-            <th class="p-2">Jumlah</th>
-            <th class="p-2">Harga</th>
-            <th class="p-2">Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($cartItems as $item)
-            <tr>
-                <td class="p-2">{{ $item->book->title }}</td>
-                <td class="p-2">{{ $item->quantity }}</td>
-                <td class="p-2">Rp{{ number_format($item->book->price, 0, ',', '.') }}</td>
-                <td class="p-2">
-                    <form action="{{ route('cart.destroy', $item->id) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="text-red-500">Hapus</button>
-                    </form>
-                </td>
-            </tr>
+@section('title', 'Keranjang')
 
-            @if ($cartItems->isNotEmpty())
-            <form action="{{ route('cart.checkout') }}" method="POST" class="mt-4">
-                @csrf
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Checkout Sekarang</button>
-            </form>
+@section('content')
+    <div class="max-w-6xl mx-auto px-6 py-10">
+        <h1 class="text-2xl font-bold mb-6">Keranjang Saya</h1>
+
+        @if (session('success'))
+            <div class="bg-green-100 text-green-800 p-4 rounded mb-4">
+                {{ session('success') }}
+            </div>
         @endif
 
-        @endforeach
-    </tbody>
-</table>
+        @if ($cartItems->isEmpty())
+            <p class="text-gray-600">Keranjang kamu kosong.</p>
+        @else
+                <table class="w-full border rounded-lg overflow-hidden shadow">
+                    <thead class="bg-gray-100 text-left">
+                        <tr>
+                            <th class="p-4">Judul Buku</th>
+                            <th class="p-4">Harga</th>
+                            <th class="p-4">Jumlah</th>
+                            <th class="p-4">Subtotal</th>
+                            <th class="p-4">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $total = 0; @endphp
+                        @foreach ($cartItems as $item)
+                            @php
+            $subtotal = $item->book->price * $item->quantity;
+            $total += $subtotal;
+                            @endphp
+                            <tr class="border-t">
+                                <td class="p-4">{{ $item->book->title }}</td>
+                                <td class="p-4">Rp {{ number_format($item->book->price, 0, ',', '.') }}</td>
+                                <td class="p-4">{{ $item->quantity }}</td>
+                                <td class="p-4">Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
+                                <td class="p-4">
+                                    <form action="{{ route('cart.destroy', $item->id) }}" method="POST"
+                                        onsubmit="return confirm('Yakin ingin hapus item ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="text-red-600 hover:underline">Hapus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                        <tr class="font-bold bg-gray-100 border-t">
+                            <td colspan="3" class="p-4 text-right">Total</td>
+                            <td class="p-4">Rp {{ number_format($total, 0, ',', '.') }}</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
 
-<form action="{{ route('checkout.process') }}" method="POST" class="mt-4">
-    @csrf
-    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Checkout</button>
-</form>
+                <form action="{{ route('cart.checkout') }}" method="GET" class="mt-6 text-right">
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow">
+                        Checkout Sekarang
+                    </button>
+                </form>
+
+        @endif
+    </div>
 @endsection

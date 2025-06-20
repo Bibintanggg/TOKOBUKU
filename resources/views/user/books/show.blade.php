@@ -2,63 +2,121 @@
 @section('title', $book->title)
 
 @section('content')
-<div class="flex flex-col md:flex-row gap-8 p-10" >
-    <!-- Gambar Cover -->
-    <div class="md:w-1/3">
-        @if ($book->cover)
-            <img src="{{ asset('covers/' . $book->cover) }}" alt="{{ $book->title }}" class="rounded shadow w-full">
-        @else
-            <div class="w-full h-[400px] bg-gray-200 flex items-center justify-center rounded shadow">
-                <p class="text-gray-500">(tidak ada cover)</p>
+    <div class="max-w-7xl mx-auto px-6 py-10">
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+            <div class="lg:col-span-2">
+                <div class="flex flex-col md:flex-row gap-8">
+
+                    <div class="md:w-1/2">
+                        @if ($book->cover)
+                            <img src="{{ asset('covers/' . $book->cover) }}" alt="{{ $book->title }}"
+                                class="rounded-xl shadow w-full h-[420px] object-cover">
+                        @else
+                            <div class="w-full h-[420px] bg-gray-200 flex items-center justify-center rounded-xl text-gray-500">
+                                Tidak ada cover
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="md:w-1/2 flex flex-col justify-between">
+                        <div>
+                            <p class="text-gray-500 mb-1">By <strong>{{ $book->author ?? 'Unknown Author' }}</strong></p>
+                            <h1 class="text-3xl font-bold text-gray-800 mb-3">{{ $book->title }}</h1>
+
+                            <div class="flex items-center gap-4 mb-4">
+                                <span class="text-2xl font-bold text-red-600">Rp
+                                    {{ number_format($book->price, 0, ',', '.') }}</span>
+                                <span class="text-sm line-through text-gray-400">Rp
+                                    {{ number_format($book->price * 1.15, 0, ',', '.') }}</span>
+                                <span class="bg-red-100 text-red-700 text-xs px-2 py-1 rounded-full font-semibold">Diskon
+                                    15%</span>
+                            </div>
+
+                            <p class="text-sm text-gray-600 mb-2"><strong>Kategori:</strong> {{ $book->category->name }}</p>
+                            <p class="text-gray-700 text-sm mb-6">{{ $book->description }}</p>
+                        </div>
+
+                        <form action="{{ route('cart.store') }}" method="POST" class="flex flex-col gap-4">
+                            @csrf
+                            <input type="hidden" name="book_id" value="{{ $book->id }}">
+
+                            <div class="flex items-center gap-4">
+                                <label for="quantity" class="text-sm font-medium text-gray-700">Jumlah:</label>
+
+                                <div class="flex items-center border rounded-lg overflow-hidden">
+                                    <button type="button" onclick="changeQty(-1)"
+                                        class="bg-gray-200 px-3 text-lg font-bold">-</button>
+                                    <input type="number" name="quantity" id="quantity" value="1" min="1"
+                                        class="w-16 text-center border-none focus:ring-0">
+                                    <button type="button" onclick="changeQty(1)"
+                                        class="bg-gray-200 px-3 text-lg font-bold">+</button>
+                                </div>
+                            </div>
+
+                            <button type="submit"
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow transition">
+                                + Tambah ke Keranjang
+                            </button>
+                        </form>
+
+                    </div>
+
+                </div>
             </div>
-        @endif
-    </div>
 
-    <div class="md:w-2/3">
-        <p class="text-lg text-gray-600 ">By {{ $book->author ?? 'Unknown Author' }}</p>
-        <h1 class="text-3xl font-bold mb-2">{{ $book->title }}</h1>
+            <div class="lg:col-span-1 bg-gray-50 p-6 rounded-xl shadow-md h-fit">
+                <h2 class="text-xl font-bold mb-4 text-gray-800">Review Pembaca</h2>
 
-        <div class="flex items-center mb-4">
-            <div class="text-2xl font-bold text-red-500 mr-4">Rp {{ number_format($book->price, 0, ',', '.') }}</div>
-            <div class="text-sm text-gray-400 line-through">Rp {{ number_format($book->price * 1.15, 0, ',', '.') }}</div>
-            <div class="ml-2 text-sm bg-red-200 text-red-600 px-2 py-1 rounded">15%</div>
+
+                <div class="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+                    @forelse($book->reviews as $review)
+                        <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                            <div class="flex justify-between items-center mb-1">
+                                <p class="font-semibold text-gray-700">{{ $review->user->name }}</p>
+                                <span class="text-xs text-gray-400">{{ $review->created_at->diffForHumans() }}</span>
+                            </div>
+                            <p class="text-gray-600 text-sm">{{ $review->review }}</p>
+                        </div>
+                    @empty
+                        <p class="text-gray-500 italic">Belum ada review.</p>
+                    @endforelse
+                </div>
+
+                <form action="{{ route('user.reviews.store') }}" method="POST" class="mt-6">
+                    @csrf
+                    <input type="hidden" name="book_id" value="{{ $book->id }}">
+
+                    <label for="review" class="block text-sm font-medium text-gray-700 mb-2">Tulis Review</label>
+                    <textarea name="review" id="review" rows="3" required
+                        class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+                        placeholder="Bagaimana pendapatmu?"></textarea>
+
+                    <button type="submit"
+                        class="mt-3 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-semibold shadow">
+                        Kirim
+                    </button>
+                </form>
+
+
+
+            </div>
         </div>
-
-        <p class="mb-4"><strong>Category:</strong> {{ $book->category->name }}</p>
-
-        <!-- Deskripsi -->
-        <p class="mb-4">{{ $book->description }}</p>
-
-        <!-- Tombol Beli -->
-        <form action="{{ route('cart.checkout') }}" method="POST">
-            @csrf
-            <input type="hidden" name="book_id" value="{{ $book->id }}">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded shadow">
-                + Keranjang
-            </button>
-        </form>
-    </div>
-</div>
-
-<!-- Bagian Review -->
-<div class="mt-12">
-    <h2 class="text-2xl font-bold mb-4">Reviews</h2>
-    <div class="space-y-4">
-        @foreach($book->reviews as $review)
-            <div class="border p-4 rounded shadow">
-                <p class="font-semibold">{{ $review->user->name }}:</p>
-                <p>{{ $review->review }}</p>
-            </div>
-        @endforeach
     </div>
 
-    <form action="{{ route('user.reviews.store') }}" method="POST" class="mt-6">
-        @csrf
-        <input type="hidden" name="book_id" value="{{ $book->id }}">
-        <textarea name="review" class="w-full border rounded p-4 mb-4" placeholder="Write a review..."></textarea>
-        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded font-semibold shadow">
-            Submit Review
-        </button>
-    </form>
-</div>
+    @push('scripts')
+        <script>
+            function changeQty(amount) {
+                const qtyInput = document.getElementById('quantity');
+                let value = parseInt(qtyInput.value);
+                if (!isNaN(value)) {
+                    value += amount;
+                    if (value < 1) value = 1;
+                    qtyInput.value = value;
+                }
+            }
+        </script>
+    @endpush
+
 @endsection

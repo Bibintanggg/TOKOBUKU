@@ -2,45 +2,51 @@
 @section('title', 'Book Store')
 
 @section('content')
-<div class="p-20">
-    <div>
+    <div class="max-w-7xl mx-auto px-10 py-12">
 
-    <div class="bg-red-300/30 max-w-[80rem]">
-        <div class="text-sm bg-red-300/30 rounded-xl">
-            <p>Saat ini, metode pengiriman yang tersedia hanya melalui sistem Cash On Delivery (COD). Kami memohon pengertian dan kesabaran Anda sementara kami terus berupaya menambahkan metode pembayaran dan pengiriman lainnya demi kenyamanan Anda di masa mendatang.</p>
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-md mb-10 shadow">
+            <p class="text-sm">
+                Saat ini, metode pengiriman yang tersedia hanya melalui sistem <strong>Cash On Delivery (COD)</strong>. Kami
+                memohon pengertian dan kesabaran Anda sementara kami terus berupaya menambahkan metode pembayaran dan
+                pengiriman lainnya demi kenyamanan Anda di masa mendatang.
+            </p>
         </div>
+
+        <div class="flex justify-between items-center flex-wrap gap-4">
+            <h1 class="text-2xl font-bold text-gray-800">Temukan Buku Favoritmu!</h1>
+            <form action="{{ route('user.books.index') }}" method="GET" class="flex gap-2 items-center">
+                <input type="text" name="search" placeholder="Cari buku.. Contoh: Inten Prosus Matematika"
+                    class="border rounded-full px-4 py-2 w-96" value="{{ request('search') }}">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-full">Cari</button>
+                <a href="{{ route('cart.index') }}" class="text-blue-600 text-xl ml-2 hover:text-blue-800">
+                    <i class="fas fa-shopping-cart"></i>
+                </a>
+            </form>
+        </div>
+
+        <h1 class="mt-10 text-xl font-semibold">Beberapa buku yang baru saja ditambahkan</h1>
+        
+        <div class="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 mt-10">
+            @foreach($books as $book)
+                <a href="{{ route('user.books.show', $book->id) }}"
+                    class="block bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden text-gray-800">
+                    @if ($book->cover)
+                        <img src="{{ asset('covers/' . $book->cover) }}" alt="{{ $book->judul }}" class="w-full h-44 object-cover">
+                    @else
+                        <div class="w-full h-36 bg-gray-200 flex items-center justify-center text-gray-500 italic">
+                            Tidak ada cover
+                        </div>
+                    @endif
+
+                    <div class="p-3 text-sm">
+                        <p class="text-xs text-gray-500">By {{ $book->author }}</p>
+                        <h2 class="font-semibold truncate">{{ $book->title }}</h2>
+                        <p class="text-gray-500 text-xs">{{ $book->category->name }}</p>
+                        <p class="text-green-600 font-bold mt-1 text-sm">Rp {{ number_format($book->price, 0, ',', '.') }}</p>
+                    </div>
+                </a>
+            @endforeach
+        </div>
+
     </div>
-    <h1 class="text-2xl font-bold mb-4 mt-10">Discover</h1>
-    
-
-    <div class="grid grid-cols-3 gap-4">
-        @foreach($books as $book)
-            <div class="border rounded p-4 shadow">
-                <h3>{{ $book->judul }}</h3>
-
-                @if ($book->cover)
-                    <img src="{{ asset('covers/' . $book->cover) }}" width="150">
-                @else
-                    <p>(tidak ada cover)</p>
-                @endif
-
-                <h2 class="font-bold text-lg">{{ $book->title }}</h2>
-                <p class="text-sm text-gray-500">{{ $book->category->name }}</p>
-                <p class="text-sm text-gray-500">{{ $book->description }}</p>
-                <p class="text-green-600 font-semibold mb-2">Rp {{ number_format($book->price, 0, ',', '.') }}</p>
-
-                <a href="{{ route('user.books.show', $book->id) }}" class="bg-blue-500 text-white py-1 px-3 rounded">Detail</a>
-
-                <form action="{{ route('cart.store') }}" method="POST" class="mt-2">
-                    @csrf
-                    <input type="hidden" name="book_id" value="{{ $book->id }}">
-                    <button type="submit" class="bg-green-500 text-white px-2 py-1 rounded">Tambah ke Keranjang</button>
-                </form>
-
-            </div>
-        @endforeach
-    </div>
-    </div>
-</div>
-
 @endsection

@@ -23,33 +23,9 @@ class CartController extends Controller
             return redirect()->route('cart.index')->with('error', 'Keranjang kamu kosong.');
         }
 
-        // ngitung total harga
-        $total = 0;
-        foreach ($cartItems as $item) {
-            $total += $item->book->price * $item->quantity;
-        }
-
-        // Simpan ke orders
-        $order = Order::create([
-            'user_id' => $user->id,
-            'total_price' => $total
-        ]);
-
-        // Simpan detail order (order_items)
-        foreach ($cartItems as $item) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'book_id' => $item->book_id,
-                'quantity' => $item->quantity,
-                'price' => $item->book->price
-            ]);
-        }
-
-        // ngosongin cart
-        Cart::where('user_id', $user->id)->delete();
-
-        return redirect()->route('cart.index')->with('success', 'Checkout berhasil!');
+        return view('user.checkout', compact('cartItems'));
     }
+
     public function index()
     {
         //
@@ -70,26 +46,30 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $bookId = $request->input('book_id');
-        $existing = Cart::where('user_id', Auth::id())->where('book_id', $bookId)->first();
+        $request->validate([
+            'book_id' => 'required|exists:books,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
 
-        if (!$bookId) {
-            return back()->with('error', 'Buku tidak ditemukan.');
-        }
+        $cartItem = Cart::where('user_id', auth()->id())
+            ->where('book_id', $request->book_id)
+            ->first();
 
-        if ($existing) {
-            $existing->increment('quantity');
+        if ($cartItem) {
+            $cartItem->quantity += $request->quantity;
+            $cartItem->save();
         } else {
             Cart::create([
-                'user_id' => Auth::id(),
+                'user_id' => auth()->id(),
                 'book_id' => $request->book_id,
-                'quantity' => 1
+                'quantity' => $request->quantity,
             ]);
         }
 
-        return redirect()->route('cart.index')->with('success', 'Buku ditambahkan ke keranjang.');
+        return redirect()->route('cart.index')->with('success', 'Buku berhasil ditambahkan ke keranjang!');
     }
+
+
 
     /**
      * Display the specified resource.

@@ -36,17 +36,22 @@ Route::prefix('admin')->name('admin.')->group(function() {
     Route::resource('books', AdminBookController::class);
     Route::resource('categories', AdminCategoryController::class);
     Route::resource('orders', AdminOrderController::class);
+    Route::patch('orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout'); // menampilkan form
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process'); // memproses form
+
 });
 
 Route::prefix('user')->name('user.')->group(function() {
     Route::get('books', [UserBookController::class, 'index'])->name('books.index');
     Route::get('books/{book}', [UserBookController::class, 'show'])->name('books.show');
     Route::resource('orders', UserOrderController::class);
-    Route::resource('reviews', UserReviewController::class);
+    Route::post('/reviews', [UserReviewController::class, 'store'])->name('user.reviews.store');
 });
 
 Route::middleware('auth')->group(function () {
+    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -62,12 +67,11 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 
     // Checkout & Pesanan
-    Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout'); // ✅ ini GET
-    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process'); // opsional, tergantung kamu pakai atau nggak
-    Route::get('/orders', [CheckoutController::class, 'index'])->name('orders.index'); // atau bisa pakai route lain
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout'); 
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/orders', [CheckoutController::class, 'index'])->name('orders.index'); 
     
-    Route::get('/books', [UserBookController::class, 'index'])->name('books.index');
-    Route::get('/books/{book}', [UserBookController::class, 'show'])->name('books.show');
+    Route::post('/user/reviews', [UserReviewController::class, 'store'])->name('user.reviews.store');
 });
 
 

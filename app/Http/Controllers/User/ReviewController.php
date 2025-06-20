@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Book;
 use App\Models\Review;
 use Illuminate\Http\Request;
@@ -28,29 +29,34 @@ class ReviewController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-     public function store(Request $request, Book $book) {
+    public function store(Request $request)
+    {
         $request->validate([
-            'content' => 'required',
-            'rating' => 'required|integer|min:1|max:5'
+            'book_id' => 'required|exists:books,id',
+            'review' => 'required|string|max:1000',
         ]);
 
         Review::create([
             'user_id' => auth()->id(),
-            'book_id' => $book->id,
-            'content' => $request->content,
-            'rating' => $request->rating
+            'book_id' => $request->book_id,
+            'review' => $request->review,
         ]);
 
-        return redirect()->route('user.books.show', $book);
+        // Ambil ulang datanya supaya review baru langsung kelihatan
+        return redirect()->route('user.books.show', $request->book_id);
     }
+
+
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
-    }
+        $book = Book::with(['category', 'reviews.user'])->findOrFail($id);
+        return view('user.books.show', compact('book'));
+    } //
+    
 
     /**
      * Show the form for editing the specified resource.

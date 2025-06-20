@@ -14,7 +14,12 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->decimal('total', 12, 2); 
+            $table->integer('total');
+            $table->string('name');
+            $table->string('address');
+            $table->string('phone');
+            $table->string('payment_method');
+            $table->enum('status', ['pending', 'berhasil', 'tidak berhasil'])->default('pending');
             $table->timestamps();
         });
     }
@@ -24,6 +29,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropColumn(['name', 'address', 'phone', 'payment_method', 'status']);
+        });
     }
 };
