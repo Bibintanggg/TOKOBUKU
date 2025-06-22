@@ -1,5 +1,4 @@
 @extends('layouts.admin')
-@section('title', 'Add Book')
 
 @section('content')
     <div class="max-w-4xl mx-auto px-4 py-6">

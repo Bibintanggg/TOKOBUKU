@@ -8,7 +8,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-white text-gray-800 font-sans">
+<body class="bg-white text-gray-800 font-jakarta">
 
     <section
         class="bg-gradient-to-r from-blue-600 to-blue-800 text-white min-h-screen flex flex-col justify-center items-center px-6 text-center relative overflow-hidden">

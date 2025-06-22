@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-white min-h-screen z-[9999vh] overflow-x-hidden">
+<body class="bg-white min-h-screen z-[9999vh] overflow-x-hidde font-jakarta">
 
     <nav class="bg-blue-500 p-6 text-white flex fixed z-50 w-full">
         <div class="justify-between flex w-full ">

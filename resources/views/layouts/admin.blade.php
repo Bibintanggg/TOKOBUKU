@@ -3,12 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Admin - @yield('title')</title>
+    <title>Toko Buku Online</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-gray-100 min-h-screen flex">
+<body class="bg-gray-100 min-h-screen flex font-jakarta">
 
     <aside class="w-64 bg-gray-900 text-white h-screen p-6 flex flex-col justify-between fixed">
         <div>
