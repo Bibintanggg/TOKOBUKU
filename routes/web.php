@@ -37,9 +37,10 @@ Route::prefix('admin')->name('admin.')->group(function() {
     Route::resource('categories', AdminCategoryController::class);
     Route::resource('orders', AdminOrderController::class);
     Route::patch('orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+    Route::put('/admin/orders/{order}', [AdminOrderController::class, 'update'])->name('admin.orders.update');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout'); // menampilkan form
-    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process'); // memproses form
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process'); 
 
 });
 

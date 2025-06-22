@@ -105,7 +105,6 @@
         </div>
     </div>
 
-    @push('scripts')
         <script>
             function changeQty(amount) {
                 const qtyInput = document.getElementById('quantity');
@@ -117,6 +116,4 @@
                 }
             }
         </script>
-    @endpush
-
 @endsection
