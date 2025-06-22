@@ -3,7 +3,7 @@
 @section('title', 'Keranjang')
 
 @section('content')
-    <div class="max-w-6xl mx-auto px-6 py-10">
+    <div class="max-w-6xl mx-auto px-6 py-20">
         <h1 class="text-2xl font-bold mb-6">Keranjang Saya</h1>
 
         @if (session('success'))

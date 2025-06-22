@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Models\Review;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -16,6 +17,9 @@ class BookController extends Controller
     public function index(Request $request)
     {
         $query = Book::with('category');
+        $categories = Category::with(['books' => function ($query) {
+            $query->latest()->take(4);
+        }])->get();
 
         if ($request->filled('search')) {
             $query->where('title', 'like', '%' . $request->search . '%')
@@ -24,7 +28,7 @@ class BookController extends Controller
 
         $books = $query->latest()->paginate(12);
 
-        return view('user.books.index', compact('books'));
+        return view('user.books.index', compact('books', 'categories'));
     }
 
     /**

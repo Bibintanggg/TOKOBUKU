@@ -2,7 +2,7 @@
 @section('title', $book->title)
 
 @section('content')
-    <div class="max-w-7xl mx-auto px-6 py-10">
+    <div class="max-w-7xl mx-auto px-6 py-24">
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
@@ -34,8 +34,13 @@
                                     15%</span>
                             </div>
 
-                            <p class="text-sm text-gray-600 mb-2"><strong>Kategori:</strong> {{ $book->category->name }}</p>
-                            <p class="text-gray-700 text-sm mb-6">{{ $book->description }}</p>
+                            <p class="text-sm text-gray-600 mb-2 bg-gray-400 items-center max-w-40 h-7 rounded-full flex items-center justify-center  bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-30 border border-gray-100">
+                                <strong class="mr-3">Kategori: </strong> {{ $book->category->name }}
+                            </p>
+
+                            <p class="text-base font-medium text-gray-600 mb-2 bg-gray-400 max-w-96 h-7 rounded-full flex bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-30 border border-gray-100">
+                                <span class="ml-5">Deskripsi : {{ $book->description }}</span>
+                            </p>
                         </div>
 
                         <form action="{{ route('cart.store') }}" method="POST" class="flex flex-col gap-4">
